@@ -20,6 +20,7 @@ type Server struct {
 
 // 创建一个server的接口
 func NewServer(ip string, port int) *Server {
+
 	server := &Server{
 		Ip:        ip,
 		Port:      port,
