@@ -59,21 +59,17 @@ func (this *Server) Handler(conn net.Conn) {
 	//fmt.Println("connect succeed!")
 
 	//用户上线，将用户加入Onlinemap表
-	user := NewUser(conn)
+	user := NewUser(conn, this)
 
-	this.mapLock.Lock()
-	this.OnlineMap[user.Name] = user
-	this.mapLock.Unlock()
+	user.Online()
 
-	//广播当前用户上线消息
-	this.BroadCast(user, "this user is online!")
 	//接受客户端发送的消息
 	go func() {
 		buf := make([]byte, 4096)
 		for {
 			n, err := conn.Read(buf)
 			if n == 0 {
-				this.BroadCast(user, "logoff!")
+				user.Offline()
 				return
 			}
 			if err != nil && err != io.EOF {
@@ -83,7 +79,7 @@ func (this *Server) Handler(conn net.Conn) {
 			//提取客户端输入，去除‘\n’
 			msg := string(buf[:n-1])
 			//将得到的消息进行广播
-			this.BroadCast(user, msg)
+			user.DoMessage(msg)
 		}
 	}()
 	//当前handler阻塞
