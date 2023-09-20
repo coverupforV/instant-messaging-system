@@ -1,0 +1,10 @@
+host: localhost:8080
+info:
+  contact: {}
+  description: gin+gorm 测试swagger自动生成API文档
+  license:
+    name: Apache 2.0
+  title: gin-swagger
+  version: "1.0"
+paths: {}
+swagger: "2.0"
